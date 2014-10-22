@@ -75,6 +75,26 @@ public class XmlDataProvider implements DataProvider<Address> {
             System.out.println("some exception!");
         }
     }
+    //remove specific address from xml file
+    //returns status of operation
+    public String removeData(Address address) {
+        Document doc = null;
+        try {
+            doc = getDocument(file);
+            NodeList nodes = doc.getElementsByTagName("address");
+            for (int index = 0; index < nodes.getLength(); index++) {
+                Element addr = (Element) nodes.item(index);
+                if (address.getLatitude() == Double.parseDouble(addr.getAttribute("latitude")) &&
+                        address.getLongitude() == Double.parseDouble(addr.getAttribute("longitude"))) {
+                    addr.getParentNode().removeChild(addr);
+                }
+            }
+            writeIntoFile(doc);
+        } catch (Exception e) {
+            return "ERROR";
+        }
+        return "SUCCESS";
+    }
 
     //get Document object
     private Document getDocument(File file) throws ParserConfigurationException, SAXException, IOException {

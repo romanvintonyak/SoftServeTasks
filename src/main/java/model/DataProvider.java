@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface DataProvider<E> {
 
-    //put new address into xml file
+    //put new address into file
     //returns status of operation
     public String putData(E data);
 
@@ -16,4 +16,7 @@ public interface DataProvider<E> {
 
     //clear all data
     public void clearData();
+
+    //remove specific address from file
+    public String removeData(E data);
 }
