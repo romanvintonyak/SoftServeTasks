@@ -26,7 +26,7 @@
             <div class="form">
           		<form>
             		<input type="text" name="description" id="description" />
-                    <input type="button" name="get_ATMs" id="get_ATMs" value="Get ATMs from server" onClick = "getReq()"/>
+                    <input type="button" name="get_req" id="get_req" value="Get ATMs from server" onClick = "getReq()"/>
           		</form>
             </div>
         </div>

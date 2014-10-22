@@ -65,7 +65,7 @@ function addMarker(position, title, type){
     return marker;
 }
 
-//Setind current position to address given in text_field
+//Setting current position to address given in text_field
 function setLocationByAddress(){
 	var addres_str = document.getElementById("address_string").value;
 		if(addres_str){
@@ -91,7 +91,7 @@ function getReq() {
    		alert ("Your browser does not support Ajax HTTP");
    		return;
   	}
-    var url = "/getdata";
+    var url = "/gmplaces/getdata";
     xmlhttp.open("GET", url, true);
     xmlhttp.onreadystatechange = function() {
   		if (xmlhttp.readyState == 4) {
@@ -120,8 +120,20 @@ function addReq(position, description) {
    		alert ("Your browser does not support Ajax HTTP");
    		return;
   	}
-    var url = "/putdata?lat="+position.lat+"&lng="+position.lng+"&description="+description;
+    var url = "/gmplaces/putdata?lat="+position.lat+"&lng="+position.lng+"&description="+description;
     xmlhttp.open("GET", url, true);
+	xmlhttp.onreadystatechange = function() {
+  		if (xmlhttp.readyState == 4) {
+     		if(xmlhttp.status == 200) {
+       			reqResult = JSON.parse(xmlhttp.responseText);
+				if(reqResult.codeAns == "OK"){
+					window.alert("Point was successfully added to XML in server");
+				} else {
+					window.alert("Point wasn't added to XML in server");
+				}
+         	}
+  		}
+	};
     xmlhttp.send(null);
 };
 
@@ -133,8 +145,20 @@ function removeReq(position) {
    		alert ("Your browser does not support Ajax HTTP");
    		return;
   	}
-    var url = "/removedata?lat="+position.lat+"&lng="+position.lng;
+    var url = "/gmplaces/removedata?lat="+position.lat+"&lng="+position.lng;
     xmlhttp.open("GET", url, true);
+	xmlhttp.onreadystatechange = function() {
+  		if (xmlhttp.readyState == 4) {
+     		if(xmlhttp.status == 200) {
+       			reqResult = JSON.parse(xmlhttp.responseText);
+				if(reqResult.codeAns == "OK"){
+					window.alert("Point was successfully removed from XML in server");
+				} else {
+					window.alert("Point wasn't removed from XML in server");
+				}
+         	}
+  		}
+	};
     xmlhttp.send(null);
 };
 
