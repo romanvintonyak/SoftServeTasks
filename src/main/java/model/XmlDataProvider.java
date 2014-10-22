@@ -22,7 +22,7 @@ import java.util.List;
 
 public class XmlDataProvider implements DataProvider<Address> {
 
-    private final File file = new File("C:\\file.xml");
+    private final File file = new File("C:\\addresses.xml");
 
     //return all data from xml
     public List<Address> getAllData() throws Exception {
