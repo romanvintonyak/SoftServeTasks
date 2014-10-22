@@ -25,36 +25,55 @@ public class XmlDataProvider implements DataProvider<Address> {
     private final File file = new File("C:\\addresses.xml");
 
     //return all data from xml
-    public List<Address> getAllData() throws Exception {
+    public List<Address> getAllData() {
 
         List<Address> list = new ArrayList<Address>();
-        Document doc = getDocument(file);
-        doc.getDocumentElement().normalize();
-        NodeList nodeList = doc.getElementsByTagName("address");
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node nNode = nodeList.item(i);
-            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element eElement = (Element) nNode;
-                list.add(new Address(Double.valueOf(eElement.getAttribute("latitude")), Double.valueOf(eElement.getAttribute("longitude")), eElement.getAttribute("description")));
+        Document doc = null;
+        try {
+            doc = getDocument(file);
+            doc.getDocumentElement().normalize();
+            NodeList nodeList = doc.getElementsByTagName("address");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node nNode = nodeList.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eElement = (Element) nNode;
+                    list.add(new Address(Double.valueOf(eElement.getAttribute("latitude")), Double.valueOf(eElement.getAttribute("longitude")), eElement.getAttribute("description")));
+                }
             }
+        } catch (Exception e) {
+            System.out.println("some exception!");
         }
-
         return list;
     }
 
     //put new address into xml file
-    public void putData(Address address) throws Exception {
-            Document doc = getDocument(file);
+    //returns status of operation
+    public String putData(Address address) {
+        Document doc = null;
+        try {
+            doc = getDocument(file);
+
             addNewElement(address, doc, doc.getDocumentElement());
             writeIntoFile(doc);
+            return "SUCCESS";
+        } catch (Exception e) {
+            return "ERROR";
+        }
     }
 
     //clear all data from xml file
-    public void clearData() throws Exception {
-        Document doc = getDocument(file);
-        Element rootElement = doc.getDocumentElement();
-        clearChildNodes(rootElement);
-        writeIntoFile(doc);
+    public void clearData() {
+        Document doc = null;
+        try {
+            if (file.exists()) {
+                doc = getDocument(file);
+                Element rootElement = doc.getDocumentElement();
+                clearChildNodes(rootElement);
+                writeIntoFile(doc);
+            }
+        } catch (Exception e) {
+            System.out.println("some exception!");
+        }
     }
 
     //get Document object
@@ -93,6 +112,7 @@ public class XmlDataProvider implements DataProvider<Address> {
         addressElement.setAttributeNode(description);
 
     }
+
     //update xml file
     private void writeIntoFile(Document doc) throws TransformerException {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -102,12 +122,11 @@ public class XmlDataProvider implements DataProvider<Address> {
         transformer.transform(source, result);
     }
 
-    //clear all child nodes
+    //clear all child nodes recursively
     private void clearChildNodes(Node node) {
         while (node.hasChildNodes()) {
             NodeList nList = node.getChildNodes();
             int index = node.getChildNodes().getLength() - 1;
-
             Node n = nList.item(index);
             clearChildNodes(n);
             node.removeChild(n);
