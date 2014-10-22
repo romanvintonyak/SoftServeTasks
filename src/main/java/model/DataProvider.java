@@ -7,9 +7,13 @@ import java.util.List;
  */
 public interface DataProvider<E> {
 
-    public void putData(E data) throws Exception;
+    //put new address into xml file
+    //returns status of operation
+    public String putData(E data);
 
-    public List<E> getAllData() throws Exception;
+    //return all data
+    public List<E> getAllData();
 
-    public void clearData() throws Exception;
+    //clear all data
+    public void clearData();
 }
